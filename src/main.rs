@@ -1,4 +1,5 @@
-use chrono::{DateTime, Local};
+use std::time::UNIX_EPOCH;
+
 use rsntp::SntpClient;
 
 fn main() {
@@ -20,9 +21,8 @@ fn main() {
 fn get_local_time_from_ntp_server(client: &SntpClient, server: &str) -> String {
     match client.synchronize(server) {
         Ok(result) => {
-            let ldt: DateTime<Local> =
-                DateTime::from(result.datetime().into_chrono_datetime().unwrap());
-            format!("{}", ldt)
+            let ldt = result.datetime().into_system_time().unwrap();
+            format!("{:?}", ldt.duration_since(UNIX_EPOCH))
         }
         Err(error) => error.to_string(),
     }
