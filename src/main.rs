@@ -18,7 +18,6 @@ fn main() {
 }
 
 fn get_local_time_from_ntp_server(client: &SntpClient, server: &str) -> String {
-    dbg!("Retrieving clock from {}...", server);
     match client.synchronize(server) {
         Ok(result) => {
             let ldt: DateTime<Local> =
